@@ -2,3 +2,7 @@
 *.pyc
 
 data/amazon-meta\.txt
+
+\.idea/
+
+tokens\.pkl
