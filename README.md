@@ -29,6 +29,6 @@ No momento só temos as tabelas presentes no arquivo:
 
 [] Pensar e atualizar os métodos das classes
 
-[] Pensar em como usar threads
+[ ] Pensar em como usar threads
 
 
