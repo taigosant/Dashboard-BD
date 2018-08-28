@@ -7,3 +7,9 @@ CREATE TABLE Product
     title TEXT,
     PRIMARY KEY (ID_Product)
 );
+
+CREATE TABLE Category(
+    ID_Category INTEGER,
+    Title TEXT,
+    PRIMARY KEY (ID_Category)
+);
