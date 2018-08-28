@@ -31,4 +31,6 @@ No momento só temos as tabelas presentes no arquivo:
 
 [ ] Pensar em como usar threads
 
+[ ] melhorar o diagrama E-R
+
 
