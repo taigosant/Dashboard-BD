@@ -13,3 +13,8 @@ CREATE TABLE Category(
     Title TEXT,
     PRIMARY KEY (ID_Category)
 );
+CREATE TABLE Group_Products(
+    ID_Group INTEGER,
+    Title Text,
+    PRIMARY KEY(ID_Group)
+);
