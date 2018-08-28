@@ -1,4 +1,5 @@
 import psycopg2 as pg
+import time
 
 class Manager(object):
 
@@ -25,6 +26,30 @@ class Manager(object):
             return True
         else:
             return False
+
+    def bunkInsert(self, mapObj):
+        try:
+            startTime = time.time()
+            conn = self.__conn
+            cursor = conn.cursor()
+            for key, value in mapObj.items():
+                try:
+                    value.executeStatement(cursor)
+                    print('Sucess!')
+                except Exception as e:
+                    print(e)
+                    break
+
+            cursor.close()
+            conn.commit()
+            endTime = time.time()
+            timeElapsed = endTime - startTime
+            print("{quantity} objects inserted! elapsed time: {time}".format(
+                                                                             quantity=len(mapObj),
+                                                                             time=timeElapsed
+            ))
+        except Exception as e:
+            print(e)
 
 
 

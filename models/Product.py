@@ -26,20 +26,26 @@ class Product(object):
                         )
         return out
 
+    def executeStatement(self, cursor):
+        try:
+            statement = "INSERT INTO product (id_product, asin, salesrank, title)" \
+                        " VALUES ({id},'{asin}',{salesrank},'{title}');".format(
+                                                                                id=self.__productId,
+                                                                                asin=self.__assin,
+                                                                                salesrank=self.__salesrank,
+                                                                                title=self.__title
+                                                                            )
+            print('executing statement: ', statement)
+            cursor.execute(statement)
+        except Exception as e:
+            print(e)
+            return e
 
     def save(self, manager):
         try:
             conn = manager.getConnector()
             cursor = conn.cursor()
-            statement = "INSERT INTO product (id_product, asin, salesrank, title)" \
-                        " VALUES ({id},'{asin}',{salesrank},'{title}');".format(
-                                                                            id=self.__productId,
-                                                                            asin=self.__assin,
-                                                                            salesrank=self.__salesrank,
-                                                                            title=self.__title
-                                                                            )
-            print('executing statement: ', statement)
-            cursor.execute(statement)
+            self.executeStatement(cursor)
             cursor.close()
             conn.commit()
             return True

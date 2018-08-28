@@ -13,11 +13,7 @@ if __name__ == '__main__':
     manager = Manager('bdzinho', 'dashboard', 'rorschach')
     manager.connect()
     if manager.isConnected():
-        for key, value in mapProd.items():
-            if value.save(manager):
-                print('Sucess!')
-                pass
-            else:
-                break
+        manager.bunkInsert(mapProd)
+
 
 
