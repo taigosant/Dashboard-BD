@@ -31,6 +31,8 @@ No momento só temos as tabelas presentes no arquivo:
 
 [ ] Pensar em como usar threads
 
+[ ] Decidir em criar as entradas Group_Product ao inserir produto no banco ou antes ? 
+
 [ ] melhorar o diagrama E-R
 
 
