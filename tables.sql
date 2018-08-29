@@ -40,3 +40,10 @@ CREATE TABLE Review(
     FOREIGN KEY (ID_Costumer) references Costumer (ID_Costumer),
     PRIMARY KEY(ID_Review)
 );
+CREATE TABLE CategoriesByProduct(
+  ID_CategoriesByProduct INTEGER NOT NULL,
+  Title TEXT,
+  ID_Prod Integer,
+  FOREIGN KEY (ID_Prod) REFERENCES Product (ID_Product),
+  PRIMARY KEY (ID_CategoriesByProduct)
+);
