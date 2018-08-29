@@ -30,3 +30,13 @@ CREATE TABLE SimilarByProduct (
     FOREIGN KEY (ID_PRODUCT) references Product (ID_Product),
     PRIMARY KEY(ID_SimilarByProduct)
 );
+CREATE TABLE Review(
+    ID_Review INTEGER NOT NULL,
+    Date DATE,
+    Votes INTEGER, 
+    Rating INTEGER,
+    Helpful INTEGER,
+    ID_Costumer INTEGER,
+    FOREIGN KEY (ID_Costumer) references Costumer (ID_Costumer),
+    PRIMARY KEY(ID_Review)
+);
