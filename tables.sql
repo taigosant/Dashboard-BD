@@ -13,8 +13,8 @@ CREATE TABLE Category(
     Title TEXT,
     PRIMARY KEY (ID_Category)
 );
-CREATE TABLE Group_Products(
-    ID_Group INTEGER,
+CREATE TABLE GroupProducts(
+    ID_Group INTEGER NOT NULL,
     Title Text,
     PRIMARY KEY(ID_Group)
 );
@@ -22,4 +22,11 @@ CREATE TABLE Group_Products(
 CREATE TABLE Costumer(
   ID_Costumer INTEGER NOT NULL,
   PRIMARY KEY(ID_Costumer)
+);
+CREATE TABLE SimilarByProduct (
+    ID_SimilarByProduct INTEGER NOT NULL,
+    ID_PRODUCT INTEGER ,
+    ID_ProductSIMILAR INTEGER,
+    FOREIGN KEY (ID_PRODUCT) references Product (ID_Product),
+    PRIMARY KEY(ID_SimilarByProduct)
 );
