@@ -18,3 +18,8 @@ CREATE TABLE Group_Products(
     Title Text,
     PRIMARY KEY(ID_Group)
 );
+
+CREATE TABLE Costumer(
+  ID_Costumer INTEGER NOT NULL,
+  PRIMARY KEY(ID_Costumer)
+);
