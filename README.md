@@ -25,7 +25,7 @@ No momento só temos as tabelas presentes no arquivo:
 
 [] Relatório
 
-[] Criar as outras classes no paito
+[ ] Criar as outras classes no paito: review e costumer
 
 [] Pensar e atualizar os métodos das classes
 
@@ -34,5 +34,3 @@ No momento só temos as tabelas presentes no arquivo:
 [ ] Decidir em criar as entradas Group_Product ao inserir produto no banco ou antes ? 
 
 [ ] melhorar o diagrama E-R
-
-
