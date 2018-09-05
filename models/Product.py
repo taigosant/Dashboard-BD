@@ -1,7 +1,10 @@
+from models.CategoryByProduct import CategoryByProduct
+
 
 class Product(object):
 
     def __init__(self, productId, assin, title, salesrank, groupId):
+        self.__categoryList = []
         self.__productId = productId
         self.__assin = assin
         self.__title = title
@@ -24,7 +27,18 @@ class Product(object):
                         )
         return out
 
-    def executeStatement(self, cursor):
+    def setCategoryList(self, categoryList):
+        self.__categoryList = categoryList
+
+    def __insertCategoryListOnDB(self, cursor):
+        for obj in self.__categoryList:
+            currentCatProd = CategoryByProduct(obj.getId(), self.__productId)
+            if currentCatProd.executeInsertStatement(cursor):
+                pass
+            else:
+                break
+
+    def executeInsertStatement(self, cursor): #Todo "ExecuteInsertStatement"
         try:
             statement = "INSERT INTO product (id_product, asin, salesrank, title)" \
                         " VALUES ({id},'{asin}',{salesrank},'{title}');".format(
@@ -35,15 +49,18 @@ class Product(object):
                                                                             )
             print('executing statement: ', statement)
             cursor.execute(statement)
+            self.__insertCategoryListOnDB(cursor)
+            return True
         except Exception as e:
             print(e)
-            return e
+            return False
 
-    def save(self, manager):
+    @staticmethod
+    def save(manager, func):
         try:
             conn = manager.getConnector()
             cursor = conn.cursor()
-            self.executeStatement(cursor)
+            func(cursor)
             cursor.close()
             conn.commit()
             return True

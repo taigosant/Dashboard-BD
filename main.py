@@ -9,11 +9,13 @@ if __name__ == '__main__':
     parser = Parser()
     parser.parse(path)
     mapProd = parser.getProductsMap()
+    mapCategories = parser.getCategoriesMap()
     print('Products length: ', len(mapProd))
     # print(mapProd[693].toString())
     manager = Manager('bdzinho', 'dashboard', 'rorschach')
     manager.connect()
     if manager.isConnected():
+        manager.bunkInsert(mapCategories)
         manager.bunkInsert(mapProd)
 
 

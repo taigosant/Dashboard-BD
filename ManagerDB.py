@@ -34,8 +34,12 @@ class Manager(object):
             cursor = conn.cursor()
             for key, value in mapObj.items():
                 try:
-                    value.executeStatement(cursor)
-                    print('Sucess!')
+                    bool = value.executeInsertStatement(cursor)
+                    if bool:
+                        print('Sucess!')
+                    else:
+                        print('statement execution failed!')
+                        break
                 except Exception as e:
                     print(e)
                     break

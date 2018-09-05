@@ -41,9 +41,9 @@ CREATE TABLE Review(
     PRIMARY KEY(ID_Review)
 );
 CREATE TABLE CategoriesByProduct(
-  ID_CategoriesByProduct INTEGER NOT NULL,
-  Title TEXT,
+  ID_CategoriesByProduct SERIAL PRIMARY KEY ,
   ID_Prod Integer,
+  ID_Cat Integer,
   FOREIGN KEY (ID_Prod) REFERENCES Product (ID_Product),
-  PRIMARY KEY (ID_CategoriesByProduct)
+  FOREIGN KEY (ID_Cat) REFERENCES Category (ID_Category)
 );
