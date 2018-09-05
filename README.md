@@ -34,3 +34,5 @@ No momento só temos as tabelas presentes no arquivo:
 [ ] Decidir em criar as entradas Group_Product ao inserir produto no banco ou antes ? 
 
 [ ] melhorar o diagrama E-R
+
+[ ] criar um link para o relatorio
