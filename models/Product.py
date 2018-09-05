@@ -1,4 +1,3 @@
-from typing import Any
 
 class Product(object):
 
@@ -13,7 +12,6 @@ class Product(object):
             pass
         else:
             self.__salesrank = 0
-
 
     def toString(self):
         out = "Title: {title}\n" \
