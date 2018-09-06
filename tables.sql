@@ -1,11 +1,10 @@
 CREATE TABLE Product
 (
-    ID_Product INTEGER NOT NULL,
+    ID_Product INTEGER PRIMARY KEY,
     ASIN TEXT NOT NULL,
     Salesrank INTEGER,
-    AVG_Rating FLOAT,
     title TEXT,
-    PRIMARY KEY (ID_Product)
+    groupId INTEGER
 );
 
 CREATE TABLE Category(
@@ -24,11 +23,10 @@ CREATE TABLE Costumer(
   PRIMARY KEY(ID_Costumer)
 );
 CREATE TABLE SimilarByProduct (
-    ID_SimilarByProduct INTEGER NOT NULL,
+    ID_SimilarByProduct SERIAL PRIMARY KEY,
     ID_PRODUCT INTEGER ,
-    ID_ProductSIMILAR INTEGER,
-    FOREIGN KEY (ID_PRODUCT) references Product (ID_Product),
-    PRIMARY KEY(ID_SimilarByProduct)
+    ID_ProductSIMILAR INTEGER
+--     FOREIGN KEY (ID_PRODUCT) references Product (ID_Product),
 );
 CREATE TABLE Review(
     ID_Review INTEGER NOT NULL,
@@ -43,7 +41,7 @@ CREATE TABLE Review(
 CREATE TABLE CategoriesByProduct(
   ID_CategoriesByProduct SERIAL PRIMARY KEY ,
   ID_Prod Integer,
-  ID_Cat Integer,
-  FOREIGN KEY (ID_Prod) REFERENCES Product (ID_Product),
-  FOREIGN KEY (ID_Cat) REFERENCES Category (ID_Category)
+  ID_Cat Integer
+--   FOREIGN KEY (ID_Prod) REFERENCES Product (ID_Product),
+--   FOREIGN KEY (ID_Cat) REFERENCES Category (ID_Category)
 );

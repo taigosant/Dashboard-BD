@@ -40,12 +40,13 @@ class Product(object):
 
     def executeInsertStatement(self, cursor): #Todo "ExecuteInsertStatement"
         try:
-            statement = "INSERT INTO product (id_product, asin, salesrank, title)" \
-                        " VALUES ({id},'{asin}',{salesrank},'{title}');".format(
+            statement = "INSERT INTO product (id_product, asin, salesrank, title, groupid)" \
+                        " VALUES ({id},'{asin}',{salesrank},'{title}', {g_id});".format(
                                                                                 id=self.__productId,
                                                                                 asin=self.__assin,
                                                                                 salesrank=self.__salesrank,
-                                                                                title=self.__title
+                                                                                title=self.__title,
+                                                                                g_id=self.__groupId
                                                                             )
             print('executing statement: ', statement)
             cursor.execute(statement)

@@ -27,7 +27,25 @@ class Manager(object):
         else:
             return False
 
-    def bunkInsert(self, mapObj):
+    def bulkInsertGroupList(self, list):
+        id = 0
+        statement = "INSERT INTO groupproducts (id_group, title) VALUES ({idGroup}, '{groupTitle}')"
+        conn = self.__conn
+        cursor = conn.cursor()
+        for group in list:
+            toExec = statement.format(idGroup=id, groupTitle=group)
+            try:
+                print('executing statement: ', toExec)
+                cursor.execute(toExec)
+                id += 1
+            except Exception as e:
+                print(e)
+                break
+        cursor.close()
+        conn.commit()
+
+
+    def bulkInsertMap(self, mapObj):
         try:
             startTime = time.time()
             conn = self.__conn

@@ -15,7 +15,7 @@ class Category(object):
     def getTitle(self):
         return self.__title
 
-    def executeInsertStatement(self, cursor): #Todo "ExecuteInsertStatement"
+    def executeInsertStatement(self, cursor):
         try:
             statement = "INSERT INTO category (id_category, title)" \
                         " VALUES ({id},'{title}');".format(

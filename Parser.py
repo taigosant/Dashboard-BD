@@ -20,6 +20,7 @@ class Parser(object):
     def __init__(self):
         self.__mapProduct = {}
         self.__mapCategorioes = {}
+        self.__groupList = []
 
     def __extractCategories(self, stringList):
 
@@ -89,8 +90,15 @@ class Parser(object):
                         salesrank = salesranks[0]
                     if len(asins) > 0:
                         asin = asins[0]
+                    idGroup = -1
 
-                    currentProduct = Product(id, asin, title, salesrank, group)
+                    if group not in self.__groupList:
+                        self.__groupList.append(group)
+                        idGroup = len(self.__groupList) -1
+                    else:
+                        idGroup = self.__groupList.index(group)
+
+                    currentProduct = Product(id, asin, title, salesrank, idGroup)
                     currentProduct.setCategoryList(productCategories)
                     print(productCategories)
                     self.__mapProduct[id] = currentProduct
@@ -104,6 +112,8 @@ class Parser(object):
 
     def getCategoriesMap(self):
         return self.__mapCategorioes
+    def getGroupsList(self):
+        return self.__groupList
 
 
 if __name__ == '__main__':

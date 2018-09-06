@@ -8,6 +8,7 @@ if __name__ == '__main__':
     print('loading data...') #Todo talvez contabilizar tempo de loading e percentual, isso é só frescura pra caso não tenha mais nada pra fazer
     parser = Parser()
     parser.parse(path)
+    groupList = parser.getGroupsList()
     mapProd = parser.getProductsMap()
     mapCategories = parser.getCategoriesMap()
     print('Products length: ', len(mapProd))
@@ -15,8 +16,9 @@ if __name__ == '__main__':
     manager = Manager('bdzinho', 'dashboard', 'rorschach')
     manager.connect()
     if manager.isConnected():
-        manager.bunkInsert(mapCategories)
-        manager.bunkInsert(mapProd)
+        manager.bulkInsertGroupList(groupList)
+        # manager.bulkInsertMap(mapCategories)
+        # manager.bulkInsertMap(mapProd)
 
 
 
