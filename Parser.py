@@ -21,6 +21,9 @@ class Parser(object):
         self.__mapReview = {}
 
     def __extractCategories(self, stringList):
+
+        categoryList = []
+
         for string in stringList:
             if '[' in string and ']' in string:
                 try:
@@ -32,11 +35,12 @@ class Parser(object):
                     id = string[idInitPos+1:idEndPos]
                     title = string[0: idInitPos]
                     currentCategory = Category(int(id), title)
-
+                    categoryList.append(currentCategory)
                     self.__mapCategorioes[id] = currentCategory
 
                 except Exception as e:
                     print(e)
+        return categoryList
     def __extractReview(self,stringList,id):
         helpful = None
         costumer = None
@@ -82,6 +86,10 @@ class Parser(object):
             
                    
 
+
+
+
+
     def parse(self, path):
         with open(path, 'rb') as pFile:
             tokens = pickle.load(pFile)
@@ -93,6 +101,7 @@ class Parser(object):
                 groups = re.findall(GROUP, token, re.MULTILINE)
                 salesranks = re.findall(SALESRANK, token, re.MULTILINE)
                 categoryChunk = re.findall(CATEGORY_CHUNK, token, re.MULTILINE)
+                productCategories = []
                 
                 reviewChunk =  token.split("reviews:")
                 if (len(reviewChunk)>1):
@@ -109,7 +118,7 @@ class Parser(object):
                         text = categoryChunk[0][0]  # categoryChuncategoryChunkk eh uma lista de tuplas, a primeira posição da tupla corresponde ao texto
                         text = text.replace("\n", "")
                         categories = text.split("|")
-                        self.__extractCategories(categories)
+                        productCategories = self.__extractCategories(categories)
                     except Exception as e:
                         print(e, '\n', text)
                
@@ -137,6 +146,8 @@ class Parser(object):
                         asin = asins[0]
 
                     currentProduct = Product(id, asin, title, salesrank, group)
+                    currentProduct.setCategoryList(productCategories)
+                    print(productCategories)
                     self.__mapProduct[id] = currentProduct
                     # print(currentProduct.toString())
                 except Exception as e:
