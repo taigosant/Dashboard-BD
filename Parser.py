@@ -21,7 +21,7 @@ class Parser(object):
         self.__mapProduct = {}
         self.__mapCategorioes = {}
         self.__groupList = []
-        self.__customerSet = set()
+        self.__customerSet = set()  # consjunto de costumers para evitar identificadores repetidos
         self.__manager = manager
 
     def __extractCategories(self, stringList):

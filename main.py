@@ -22,6 +22,7 @@ if __name__ == '__main__':
         manager.bulkInsertGroupList(parser.getGroupsList())
         input("costumer.. input something")
         manager.bulkInsertCustomerList(parser.getCostumerSet())
+        input("categories.. input something")
         manager.bulkInsertMap(parser.getCategoriesMap())
         print("Finished!")
 
