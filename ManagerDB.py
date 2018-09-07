@@ -59,7 +59,7 @@ class Manager(object):
         conn.commit()
 
     def bulkInsertCustomerList(self, list):
-        statement = "INSERT INTO customer (id_costumer) VALUES ('{costumer}');"
+        statement = "INSERT INTO costumer (id_costumer) VALUES ('{costumer}');"
         conn = self.__conn
         cursor = conn.cursor()
         for customer in list:
