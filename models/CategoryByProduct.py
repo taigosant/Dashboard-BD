@@ -17,7 +17,7 @@ class CategoryByProduct(object):
                                                             idP=self.__productId,
                                                             idC=self.__categoryId
                                                             )
-            print('executing statement: ', statement)
+            # print('executing statement: ', statement)
             cursor.execute(statement)
             return True
         except Exception as e:

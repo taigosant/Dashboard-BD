@@ -1,6 +1,7 @@
 import psycopg2 as pg
 import time
 
+
 class Manager(object):
 
     def __init__(self, user, dbName, password):
@@ -27,6 +28,18 @@ class Manager(object):
         else:
             return False
 
+    def executeArbitraryStatement(self, statement):
+        try:
+            cursor = self.__conn.cursor()
+            cursor.execute(statement)
+            cursor.close()
+            self.__conn.commit()
+            print("Sucess!")
+        except Exception as e:
+            print(e)
+
+
+
     def bulkInsertGroupList(self, list):
         id = 0
         statement = "INSERT INTO groupproducts (id_group, title) VALUES ({idGroup}, '{groupTitle}')"
@@ -38,12 +51,56 @@ class Manager(object):
                 print('executing statement: ', toExec)
                 cursor.execute(toExec)
                 id += 1
+                print('Sucess!')
             except Exception as e:
                 print(e)
                 break
         cursor.close()
         conn.commit()
 
+    def bulkInsertCustomerList(self, list):
+        statement = "INSERT INTO customer (ID_Costumer) VALUES ('{costumer}');"
+        conn = self.__conn
+        cursor = conn.cursor()
+        for customer in list:
+            toExec = statement.format(costumer=customer)
+            try:
+                print('executing statement: ', toExec)
+                cursor.execute(toExec)
+                print('Sucess!')
+            except Exception as e:
+                print(e)
+                break
+        cursor.close()
+        conn.commit()
+
+    def bulkInsertList(self, list):
+        try:
+            startTime = time.time()
+            conn = self.__conn
+            cursor = conn.cursor()
+            for value in list:
+                try:
+                    bool = value.executeInsertStatement(cursor)
+                    if bool:
+                        print('Sucess!')
+                    else:
+                        print('statement execution failed!')
+                        break
+                except Exception as e:
+                    print(e)
+                    break
+
+            cursor.close()
+            conn.commit()
+            endTime = time.time()
+            timeElapsed = endTime - startTime
+            print("{quantity} objects inserted! elapsed time: {time}".format(
+                                                                             quantity=len(list),
+                                                                             time=timeElapsed
+            ))
+        except Exception as e:
+            print(e)
 
     def bulkInsertMap(self, mapObj):
         try:
