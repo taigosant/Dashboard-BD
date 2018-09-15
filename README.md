@@ -15,7 +15,7 @@ No momento só temos as tabelas presentes no arquivo:
 > tables.sql
 
 ### To do's:
-[] Outras tables
+[X] Outras tables
 
 [] Scripts pra facilitar a vida
 
@@ -25,14 +25,14 @@ No momento só temos as tabelas presentes no arquivo:
 
 [] Relatório
 
-[ ] Criar as outras classes no paito: review e costumer
+[X ] Criar as outras classes no paito: review e costumer
 
 [] Pensar e atualizar os métodos das classes
 
 [ ] Pensar em como usar threads
 
-[ ] Decidir em criar as entradas Group_Product ao inserir produto no banco ou antes ? 
+[X ] Decidir em criar as entradas Group_Product ao inserir produto no banco ou antes ? 
 
 [ ] melhorar o diagrama E-R
 
-[ ] criar um link para o relatorio
+[x] criar um link para o relatorio : https://www.overleaf.com/19339287fgpwhnysfptd
