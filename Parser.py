@@ -5,7 +5,7 @@ from models.Product import Product
 from models.Category import Category
 from models.Review import Review
 from models.CategoryByProduct import CategoryByProduct
-path = 'tokens.pkl'
+path = "/home/taigo/Documents/2018.2/BD/Dashboard-BD/data/amazon-meta.txt"
 
 #regexes
 ASIN = r"ASIN: (.*)"
@@ -137,95 +137,86 @@ class Parser(object):
 
     def parse(self, path):
         cursor = self.__manager.getConnector().cursor()
-        pFile = open(path, 'rb')
-        tokens = pickle.load(pFile)
-        pFile.close()
-        id = 0
-        for token in tokens:
+        with open(path) as file:
+            data = file.read()
+            tokens = data.split('\n\n')
+            tokens = tokens[:-1]
+            id = 0
+            for token in tokens:
 
-            #print(token)
-            self.__printCompletePercent(id)
-            asins = re.findall(ASIN, token, re.MULTILINE)
-            titles = re.findall(TITLE, token, re.MULTILINE)
-            similars = re.findall(SIMILAR, token, re.MULTILINE)
-            groups = re.findall(GROUP, token, re.MULTILINE)
-            salesranks = re.findall(SALESRANK, token, re.MULTILINE)
-            categoryChunk = re.findall(CATEGORY_CHUNK, token, re.MULTILINE)
-            # productCategories = []
+                print(token)
+                self.__printCompletePercent(id)
+                asins = re.findall(ASIN, token, re.MULTILINE)
+                titles = re.findall(TITLE, token, re.MULTILINE)
+                similars = re.findall(SIMILAR, token, re.MULTILINE)
+                groups = re.findall(GROUP, token, re.MULTILINE)
+                salesranks = re.findall(SALESRANK, token, re.MULTILINE)
+                categoryChunk = re.findall(CATEGORY_CHUNK, token, re.MULTILINE)
+                # productCategories = []
 
-            reviewChunk = token.split("reviews:")
-            if len(reviewChunk) > 1:
+                reviewChunk = token.split("reviews:")
+                if len(reviewChunk) > 1:
+                    try:
+                        review =  reviewChunk[1].split("\n")
+                        self.__extractReview(review, id, cursor)
+                    except Exception as e:
+                        print(e, '\n', review)
+
+                categories = []
+
+                if len(categoryChunk) > 0:
+                    try:
+                        text = categoryChunk[0][0]  # categoryChuncategoryChunkk eh uma lista de tuplas, a primeira posição da tupla corresponde ao texto
+                        text = text.replace("\n", "")
+                        categories = text.split("|")
+                        self.__extractCategories(categories, cursor, id)
+                    except Exception as e:
+                        print(e, '\n', text)
+
                 try:
-                    review =  reviewChunk[1].split("\n")
-                    self.__extractReview(review, id, cursor)
+                    title = "empty"
+                    asin = "empty"
+                    group = "empty"
+                    salesrank = 0
+
+                    if len(titles) > 0:
+                        title = titles[0]
+                        title = title.replace("'", "")
+                    if len(groups) > 0:
+                        group = groups[0]
+                    if len(salesranks) > 0:
+                        salesrank = salesranks[0]
+                    if len(asins) > 0:
+                        asin = asins[0]
+                    idGroup = -1
+
+                    if group not in self.__groupList:
+                        self.__groupList.append(group)
+                        idGroup = len(self.__groupList) -1
+                    else:
+                        idGroup = self.__groupList.index(group)
+
+                    similarList = []  # similares
+                    if len(similars) > 0:
+                        match = similars[0]
+                        match = match.split()
+                        if len(match) > 1:
+                            similarList = match[1:]
+
+                    currentProduct = Product(id, asin, title, salesrank, idGroup, similarList)
+
+                    if currentProduct.executeInsertStatement(cursor):
+                        pass
+                    else:
+                        print("error inserting product: ", id)
+                        return
+                    # print(currentProduct.toString())
                 except Exception as e:
-                    print(e, '\n', review)
+                    print(e)
+                id += 1
 
-            categories = []
-
-            if len(categoryChunk) > 0:
-                try:
-                    text = categoryChunk[0][0]  # categoryChuncategoryChunkk eh uma lista de tuplas, a primeira posição da tupla corresponde ao texto
-                    text = text.replace("\n", "")
-                    categories = text.split("|")
-                    self.__extractCategories(categories, cursor, id)
-                except Exception as e:
-                    print(e, '\n', text)
-
-            # print('ID:', id)
-            # print('ASIN:', asins)
-            # print('TITLE:', titles)
-            # print('SIMILAR:', similars)
-            # print('GROUP:', groups)
-            # print('SALESRANK:', salesranks)
-            # print('CATEGORY_CHUNK:', categories)
-
-            try:
-                title = "empty"
-                asin = "empty"
-                group = "empty"
-                salesrank = 0
-
-                if len(titles) > 0:
-                    title = titles[0]
-                    title = title.replace("'", "")
-                if len(groups) > 0:
-                    group = groups[0]
-                if len(salesranks) > 0:
-                    salesrank = salesranks[0]
-                if len(asins) > 0:
-                    asin = asins[0]
-                idGroup = -1
-
-                if group not in self.__groupList:
-                    self.__groupList.append(group)
-                    idGroup = len(self.__groupList) -1
-                else:
-                    idGroup = self.__groupList.index(group)
-
-                similarList = []  # similares
-                if len(similars) > 0:
-                    match = similars[0]
-                    match = match.split()
-                    if len(match) > 1:
-                        similarList = match[1:]
-
-                currentProduct = Product(id, asin, title, salesrank, idGroup, similarList)
-                # currentProduct.setCategoryList(productCategories)
-                # print(productCategories)
-                # self.__mapProduct[id] = currentProduct
-                if currentProduct.executeInsertStatement(cursor):
-                    pass
-                else:
-                    print("error inserting product: ", id)
-                    return
-                # print(currentProduct.toString())
-            except Exception as e:
-                print(e)
-            id += 1
-
-        cursor.close()
-        self.__manager.getConnector().commit()
+            cursor.close()
+            self.__manager.getConnector().commit()
 
 
     def getCategoriesMap(self):
@@ -241,7 +232,11 @@ class Parser(object):
 if __name__ == '__main__':
     p = Parser()
     try:
-        p.parse(path)
+        with open(path) as file:
+            data = file.read()
+            tokens = data.split("\n\n")
+            tokens = tokens[:-1]
+            print(tokens[-1])
 
     except Exception as e:
         print(e)

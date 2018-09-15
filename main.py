@@ -1,14 +1,18 @@
-from models.Product import Product
-from models.Review import Review
 from Parser import Parser
 from ManagerDB import Manager
 from Query import Query
+import sys
 import time
-import pickle
-path = 'tokens.pkl'
+
+host = sys.argv[1]
+user = sys.argv[2]
+db_name = sys.argv[3]
+password = sys.argv[4]
+path = sys.argv[5]
 
 if __name__ == '__main__':
-    manager = Manager('bdzinho', 'dashboard', 'rorschach')
+    print(host, user, db_name, password, path)
+    manager = Manager(host, user, db_name, password)
     manager.connect()
     if manager.isConnected():
         print("creating database...")

@@ -4,10 +4,11 @@ import time
 
 class Manager(object):
 
-    def __init__(self, user, dbName, password):
+    def __init__(self, host, user, dbName, password):
         self.__config = {
+            'host': host,
             'user': user,
-            'dbname': dbName,
+            'database': dbName,
             'password': password
         }
         self.__conn = None
