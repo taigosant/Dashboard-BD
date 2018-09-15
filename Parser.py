@@ -4,6 +4,7 @@ import re
 from models.Product import Product
 from models.Category import Category
 from models.Review import Review
+from models.CategoryByProduct import CategoryByProduct
 path = 'tokens.pkl'
 
 #regexes
@@ -24,8 +25,8 @@ class Parser(object):
         self.__customerSet = set()  # consjunto de costumers para evitar identificadores repetidos
         self.__manager = manager
 
-    def __extractCategories(self, stringList):
-        categoryList = []
+    def __extractCategories(self, stringList, cursor, prodId):
+        # categoryList = []
 
         for string in stringList:
             if '[' in string and ']' in string:
@@ -40,7 +41,13 @@ class Parser(object):
 
                     if str(id).isnumeric():
                         currentCategory = Category(int(id), title)
-                        categoryList.append(currentCategory)
+                        currentCategoryByProd = CategoryByProduct(int(id), prodId)
+
+                        if currentCategoryByProd.executeInsertStatement(cursor):
+                            pass
+                        else:
+                            print("insertion failed:", currentCategoryByProd.toString())
+                        # categoryList.append(currentCategory)
                         self.__mapCategorioes[id] = currentCategory
 
                     else: # tratando um caso chato em que a string vem assim "title [guitar][213213]"
@@ -53,15 +60,19 @@ class Parser(object):
 
                         if str(id).isnumeric():
                             currentCategory = Category(int(id), title)
-                            categoryList.append(currentCategory)
+                            currentCategoryByProd = CategoryByProduct(int(id), prodId)
+
+                            if currentCategoryByProd.executeInsertStatement(cursor):
+                                pass
+                            else:
+                                print("insertion failed:", currentCategoryByProd.toString())
+                            # categoryList.append(currentCategory)
                             self.__mapCategorioes[id] = currentCategory
                         else:
                             print("inconsistent category: ", string)
 
                 except Exception as e:
                     print(e)
-
-        return categoryList
 
     def __extractReview(self, stringList, prod_id, cursor):
         helpful = -1
@@ -140,24 +151,24 @@ class Parser(object):
             groups = re.findall(GROUP, token, re.MULTILINE)
             salesranks = re.findall(SALESRANK, token, re.MULTILINE)
             categoryChunk = re.findall(CATEGORY_CHUNK, token, re.MULTILINE)
-            productCategories = []
+            # productCategories = []
 
-            reviewChunk =  token.split("reviews:")
-            if (len(reviewChunk)>1):
+            reviewChunk = token.split("reviews:")
+            if len(reviewChunk) > 1:
                 try:
                     review =  reviewChunk[1].split("\n")
-                    #print("REVIEW ",(review))
                     self.__extractReview(review, id, cursor)
                 except Exception as e:
                     print(e, '\n', review)
 
             categories = []
+
             if len(categoryChunk) > 0:
                 try:
                     text = categoryChunk[0][0]  # categoryChuncategoryChunkk eh uma lista de tuplas, a primeira posição da tupla corresponde ao texto
                     text = text.replace("\n", "")
                     categories = text.split("|")
-                    productCategories = self.__extractCategories(categories)
+                    self.__extractCategories(categories, cursor, id)
                 except Exception as e:
                     print(e, '\n', text)
 
@@ -200,7 +211,7 @@ class Parser(object):
                         similarList = match[1:]
 
                 currentProduct = Product(id, asin, title, salesrank, idGroup, similarList)
-                currentProduct.setCategoryList(productCategories)
+                # currentProduct.setCategoryList(productCategories)
                 # print(productCategories)
                 # self.__mapProduct[id] = currentProduct
                 if currentProduct.executeInsertStatement(cursor):
@@ -223,35 +234,17 @@ class Parser(object):
     def getGroupsList(self):
         return self.__groupList
 
-    # def getReviewList(self):
-    #     return self.__reviewList
-
     def getCostumerSet(self):
         return self.__customerSet
 
-# if __name__ == '__main__':
-#     p = Parser()
-#     try:
-#         p.parse(path)
-#         with open('productsMap.pkl', 'wb') as pico:
-#             pickle.dump(p.getProductsMap(), pico)
-#
-#         with open('categoryMap.pkl', 'wb') as pico1:
-#             pickle.dump(p.getCategoriesMap(), pico1)
-#
-#         with open('reviewMap.pkl', 'wb') as pico2:
-#             pickle.dump(p.getReviewMap(), pico2)
-#
-#         with open('groupList.pkl', 'wb') as pico3:
-#             pickle.dump(p.getGroupsList(), pico3)
-#
-#         # print("Number of products: ", len(p.getProductsMap()))
-#         # print("Number of categories: ", len(p.getCategoriesMap()))
-#         #
-#         # for key, value in p.getCategoriesMap().items():
-#         #     print(value.toString())
-#     except Exception as e:
-#         print(e)
+
+if __name__ == '__main__':
+    p = Parser()
+    try:
+        p.parse(path)
+
+    except Exception as e:
+        print(e)
 
 
 

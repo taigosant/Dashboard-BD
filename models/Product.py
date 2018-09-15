@@ -62,7 +62,7 @@ class Product(object):
                                                                             )
             # print('executing statement: ', statement)
             cursor.execute(statement)
-            self.__insertCategoryListOnDB(cursor)  # categoriesByProduct sendo inserido aqui
+            # self.__insertCategoryListOnDB(cursor)
             if len(self.__similarList) > 0:
                 self.__insertSimilars(cursor)
             return True
