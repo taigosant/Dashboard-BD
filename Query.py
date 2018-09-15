@@ -61,3 +61,33 @@ CREATE TABLE CategoriesByProduct(
 -- FOREIGN KEY (ID_Cat) REFERENCES Category (ID_Category)
 );
     """
+    A_QUERY = """
+        (select * 
+        from review join costumer on review.id_costumer = costumer.id_costumer join product on product.id_product = id_product where asin = '%s' order by rating desc, helpful desc limit 5) union all (select * from review join costumer on review.id_costumer = costumer.id_costumer join product on product.id_product = id_product where asin = '%s' order by rating, helpful desc limit 5);
+    """
+
+    B_QUERY = """
+    select  p2.id_product, p2.asin, p2.title, p2.salesrank 
+    from product p, similarbyproduct, product p2 
+    where p.asin = asin_product and p2.asin = asin_productsimilar and p.salesrank <= p2.salesrank and p2.salesrank > 0 and p.asin='{ASIN}';
+    """
+    C_QUERY = """
+    select r_date, avg(rating) from product join review r on prod_id = id_product where asin ='%s' group by r_date order by r_date;
+    """
+
+    D_QUERY = """
+    SELECT *  FROM (
+        SELECT *, 
+        rank() OVER (
+            PARTITION BY id_group
+            ORDER BY salesrank ASC
+        )
+        FROM (select * from groupproducts join product p on p.groupid = groupproducts.id_group where p.salesrank > 0) as subaux
+    ) rank_filter where rank <= 10;
+    """
+
+    E_QUERY = """
+    select title, avg(rating) as rating_avg, avg(helpful) as helpful_avg 
+    from review join product p on prod_id = p.id_product
+    group by p.id_product, p.title order by rating_avg desc, helpful_avg desc limit 10
+    """

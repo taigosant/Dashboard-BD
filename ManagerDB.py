@@ -39,7 +39,17 @@ class Manager(object):
         except Exception as e:
             print(e)
 
+    def executeSelectStmt(self, statement):
+        try:
+            cursor = self.__conn.cursor()
+            cursor.execute(statement)
+            result = cursor.fetchall()
+            cursor.close()
+            return result
+        except Exception as e:
+            print(e)
 
+        return
 
     def bulkInsertGroupList(self, list):
         id = 0
