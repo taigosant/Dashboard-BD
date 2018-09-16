@@ -5,7 +5,7 @@ class Review(object):
         self.__rating = str(rating).strip()
         self.__helpful = str(helpful).strip()
         self.__productId = productId
-        self.__constumerId= str(costumerId).strip()
+        self.__constumerId = costumerId
 
     def toString(self):
         stringToReturn = "\n"

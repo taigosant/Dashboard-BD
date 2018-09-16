@@ -63,7 +63,12 @@ CREATE TABLE CategoriesByProduct(
     """
     A_QUERY = """
         (select * 
-        from review join costumer on review.id_costumer = costumer.id_costumer join product on product.id_product = id_product where asin = '%s' order by rating desc, helpful desc limit 5) union all (select * from review join costumer on review.id_costumer = costumer.id_costumer join product on product.id_product = id_product where asin = '%s' order by rating, helpful desc limit 5);
+        from review natural join product  
+        where asin = '{asin}' order by rating desc, helpful desc limit 5) 
+        union all 
+        (select * 
+        from review natural join product 
+        where asin = '{asin1}' order by rating, helpful desc limit 5);
     """
 
     B_QUERY = """
@@ -72,7 +77,7 @@ CREATE TABLE CategoriesByProduct(
     where p.asin = asin_product and p2.asin = asin_productsimilar and p.salesrank <= p2.salesrank and p2.salesrank > 0 and p.asin='{ASIN}';
     """
     C_QUERY = """
-    select r_date, avg(rating) from product join review r on prod_id = id_product where asin ='%s' group by r_date order by r_date;
+    select r_date, avg(rating) from product join review r on prod_id = id_product where asin ='{asin}' group by r_date order by r_date;
     """
 
     D_QUERY = """
@@ -90,4 +95,35 @@ CREATE TABLE CategoriesByProduct(
     select title, avg(rating) as rating_avg, avg(helpful) as helpful_avg 
     from review join product p on prod_id = p.id_product
     group by p.id_product, p.title order by rating_avg desc, helpful_avg desc limit 10
+    """
+
+    F_QUERY = """
+        SELECT title, AVG(helpful) as AVG_helpful
+        FROM (category JOIN (
+	          categoriesbyproduct JOIN 
+	            (SELECT prod_id,helpful from review) AS produto_avaliacoes on id_prod = prod_id
+	            ) as seila on id_category = id_cat
+              ) AS avaliacoes_categoria
+        GROUP BY title
+        ORDER BY AVG_helpful DESC LIMIT 5;
+    """
+
+    G_QUERY = """
+        SELECT *  FROM (
+        SELECT *, 
+        rank() OVER (
+            PARTITION BY id_group
+            ORDER BY c DESC
+        )
+        FROM (  select groupproducts.title, id_costumer,id_group, count(*) as c from product
+        join review on prod_id = id_product
+        join groupproducts on groupid = id_group
+        natural join costumer
+        group by id_costumer, id_group
+        order by c desc) as did
+    ) rank_filter
+    natural join costumer
+    where rank <= 10
+    order by id_group, rank;
+
     """

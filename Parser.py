@@ -115,6 +115,7 @@ class Parser(object):
 
 
             if costumer != -1:
+                costumer = str(costumer).strip()
                 self.__customerSet.add(costumer)
 
                 r = Review(date, votes, rating, helpful, prod_id, costumer)
@@ -144,7 +145,7 @@ class Parser(object):
             id = 0
             for token in tokens:
 
-                print(token)
+                # print(token)
                 self.__printCompletePercent(id)
                 asins = re.findall(ASIN, token, re.MULTILINE)
                 titles = re.findall(TITLE, token, re.MULTILINE)

@@ -45,6 +45,7 @@ class Manager(object):
             cursor.execute(statement)
             result = cursor.fetchall()
             cursor.close()
+            print("Success!")
             return result
         except Exception as e:
             print(e)
