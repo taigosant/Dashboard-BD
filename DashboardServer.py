@@ -6,6 +6,7 @@ Created on Sun Sep 16 11:03:42 2018
 """
 from ManagerDB import Manager
 from Query import Query
+import sys
 host = sys.argv[1]
 user = sys.argv[2]
 db_name = sys.argv[3]
