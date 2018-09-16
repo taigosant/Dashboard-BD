@@ -6,16 +6,14 @@ Created on Sun Sep 16 11:03:42 2018
 """
 from ManagerDB import Manager
 from Query import Query
-host = "localhost"
-user = "postgres"
+host = sys.argv[1]
+user = sys.argv[2]
+db_name = sys.argv[3]
+password = sys.argv[4]
 
-#user = sys.argv[2]
-db_name = "bdzinho"
-#db_name = sys.argv[3]
-#password = sys.argv[4]
-password = "senha123"
-#path = sys.argv[5]
 
+def showGhostASSIN():
+	print("\nEste produto com esse asin não existe aqui :( \n")
 def showWrongChoice():
     print("_____________________________________________________\n")
     print("Essa escolha nao esta disponivel no sistema\nPor favor, digite as opcoes dentro do menu\n")
@@ -44,7 +42,13 @@ def query1():
     print("Informe o ASIN do produto:  ")
     productASIN = input()
     result = mg.executeSelectStmt(Query.A_QUERY.format(asin=productASIN, asin1=productASIN))
-    print(result, '\n')
+    if(result==[]):
+    	showGhostASSIN()
+    else:	
+    	print("CLIENTE            |        DATA      ")
+    	for x in result:
+    		print(str(x[6]) + "        "+ str(x[1]) )
+    #print(result, '\n')
     
 def query2():
     print("\n\n\n")
@@ -52,33 +56,65 @@ def query2():
     productASIN = input()
     #"B00004YNH2"
     result1 = mg.executeSelectStmt(Query.B_QUERY.format(ASIN=productASIN))
-    print(result1, '\n')
+    if(result1==[]):
+    	showGhostASSIN()
+    else:	
+    	print("ASIN            |         TITLE      |        SALESRANK")
+    	for x in result1:
+    		print(str(x[1]) + "       "+ str(x[2] ) + "  " + str(x[3]))
+    	
+    	
     
 def query3():
     print("\n\n\n")
     print("Informe o ASIN do produto:  ")
     productASIN = input()
     result2 = mg.executeSelectStmt(Query.C_QUERY.format(asin=productASIN))
-    print(result2, '\n')
+    if(result2==[]):
+    	showGhostASSIN()
+    else:
+    	print("DATA            |          AVG RATING ")
+    	for x in result2:
+    		print(str(x[0]) + "          "+ str(x[1] ))
+    	
+    	
 
 def query4():
     print("\n\n\n")
     result3 = mg.executeSelectStmt(Query.D_QUERY)
-    print(result3, '\n')
+
+    print("CATEGORY          |          TITLE ")
+    for x in result3:
+    	print(str(x[1]) + "              " + str(x[5]) )
+ 
     
 def query5():
     print("\n\n\n")
+
+    print("TITLE              |     AVG RATING       | AVG HELPFUL ")
     result4 = mg.executeSelectStmt(Query.E_QUERY)
-    print(result4, '\n')
+    for x in result4:
+    	print(str(x[0]) + "     " + str(x[1]) + "    " +str(x[2]))
     
 def query6():
     print("\n\n\n")
     result5 = mg.executeSelectStmt(Query.F_QUERY)
-    print(result5, '\n')
+
+    print("TITLE                  |        AVG HELPFUL ")
+    for x in result5:
+    	print(str(x[0]) + "             " + str(x[1]) )
+    #print(result5, '\n')
+
 def query7():
     print("\n\n\n")
+    print("Cliente                  |       GRUPO")
+ 
     result6 = mg.executeSelectStmt(Query.G_QUERY)
-    print(result6, '\n')
+    print("\n\n")
+    for x in result6:
+    	print(str(x[0]) + "             " + str(x[1]) )
+    #print(result6, '\n')
+
          
     
 def choiceUser(choiceInput):
