@@ -3,7 +3,8 @@ Simple dashboard made for the discipline BD1 - 2018/2
 
 ### Execução
 
-> python3 main.py
+> python3 main.py **host** **user** **database** **password** **path** 
+
 
 ### Conectando com o postgres
 
@@ -17,19 +18,15 @@ No momento só temos as tabelas presentes no arquivo:
 ### To do's:
 [X] Outras tables
 
-[] Scripts pra facilitar a vida
+[X] Scripts pra facilitar a vida
 
-[] Consultas SQL
+[X] Consultas SQL
 
 [] Dashboard
 
 [] Relatório
 
 [X ] Criar as outras classes no paito: review e costumer
-
-[] Pensar e atualizar os métodos das classes
-
-[ ] Pensar em como usar threads
 
 [X ] Decidir em criar as entradas Group_Product ao inserir produto no banco ou antes ? 
 
