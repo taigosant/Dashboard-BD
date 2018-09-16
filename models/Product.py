@@ -50,7 +50,27 @@ class Product(object):
             else:
                 break
 
-    def executeInsertStatement(self, cursor): #Todo "ExecuteInsertStatement"
+    def getValuesString(self):
+        return "({id},'{asin}',{salesrank},'{title}', {g_id})".format(
+                                                                        id=self.__productId,
+                                                                        asin=self.__assin,
+                                                                        salesrank=self.__salesrank,
+                                                                        title=self.__title,
+                                                                        g_id=self.__groupId
+                                                                     )
+
+    def getSimilarValueString(self):
+        values = "('{asin_prod}','{asin_sim}')"
+        toRt = ",".join([values.format(asin_prod=self.__assin, asin_sim=x) for x in self.__similarList if len(x) > 1])
+
+        # for i in range(0, len(self.__similarList)):
+        #     aux = values.format(asin_prod=self.__assin, asin_sim=self.__similarList[i])
+        #     toRt += aux
+        #     if i < (len(self.__similarList)-1):
+        #         toRt += ","
+        return toRt
+
+    def executeInsertStatement(self, cursor):  #Todo "ExecuteInsertStatement"
         try:
             statement = "INSERT INTO product (id_product, asin, salesrank, title, groupid)" \
                         " VALUES ({id},'{asin}',{salesrank},'{title}', {g_id});".format(

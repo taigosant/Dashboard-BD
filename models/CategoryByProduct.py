@@ -10,6 +10,12 @@ class CategoryByProduct(object):
         stringToReturn += "ProductId = " + str(self.__productId) + "\n"
         return stringToReturn
 
+    def getValuesString(self):
+        return "({idP},{idC})".format(
+                                    idP=self.__productId,
+                                    idC=self.__categoryId
+                                    )
+
     def executeInsertStatement(self, cursor):
         try:
             statement = "INSERT INTO categoriesbyproduct (id_prod, id_cat)" \

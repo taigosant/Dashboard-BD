@@ -19,14 +19,21 @@ CATEGORY_CHUNK = r"categories:((.|\n)*)reviews"
 class Parser(object):
     def __init__(self, manager=None):
         self.__percents = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
-        self.__mapProduct = {}
-        self.__mapCategorioes = {}
-        self.__groupList = []
-        self.__customerSet = set()  # consjunto de costumers para evitar identificadores repetidos
+        self.mapCategorioes = {}
+        self.groupList = []
+        self.customerSet = set()  # consjunto de costumers para evitar identificadores repetidos
         self.__manager = manager
+        self.bulkStrProd = "INSERT INTO product (id_product, asin, salesrank, title, groupid) VALUES "
+        self.bulkStrSimilar = "INSERT INTO similarbyproduct (ASIN_PRODUCT, ASIN_ProductSIMILAR) VALUES "
+        self.bulkStrCatByProd = "INSERT INTO categoriesbyproduct (id_prod, id_cat) VALUES "
+        self.bulkStrReview = "INSERT INTO review (r_date, votes, rating, helpful, prod_id, ID_Costumer) VALUES "
+        self.bulkStrProdList = []
+        self.bulkStrSimilarList = []
+        self.bulkStrCatByProdList = []
+        self.bulkStrReviewList = []
 
     def __extractCategories(self, stringList, cursor, prodId):
-        # categoryList = []
+        categoryList = []
 
         for string in stringList:
             if '[' in string and ']' in string:
@@ -42,13 +49,15 @@ class Parser(object):
                     if str(id).isnumeric():
                         currentCategory = Category(int(id), title)
                         currentCategoryByProd = CategoryByProduct(int(id), prodId)
+                        categoryList.append(currentCategoryByProd.getValuesString())
 
-                        if currentCategoryByProd.executeInsertStatement(cursor):
-                            pass
-                        else:
-                            print("insertion failed:", currentCategoryByProd.toString())
+                        # if currentCategoryByProd.executeInsertStatement(cursor):
+                        #     pass
+                        # else:
+                        #     print("insertion failed:", currentCategoryByProd.toString())
                         # categoryList.append(currentCategory)
-                        self.__mapCategorioes[id] = currentCategory
+
+                        self.mapCategorioes[id] = currentCategory
 
                     else: # tratando um caso chato em que a string vem assim "title [guitar][213213]"
                         string = string.replace("[", "(", 1)
@@ -61,26 +70,32 @@ class Parser(object):
                         if str(id).isnumeric():
                             currentCategory = Category(int(id), title)
                             currentCategoryByProd = CategoryByProduct(int(id), prodId)
+                            categoryList.append(currentCategoryByProd.getValuesString())
 
-                            if currentCategoryByProd.executeInsertStatement(cursor):
-                                pass
-                            else:
-                                print("insertion failed:", currentCategoryByProd.toString())
+                            # if currentCategoryByProd.executeInsertStatement(cursor):
+                            #     pass
+                            # else:
+                            #     print("insertion failed:", currentCategoryByProd.toString())
                             # categoryList.append(currentCategory)
-                            self.__mapCategorioes[id] = currentCategory
+
+                            self.mapCategorioes[id] = currentCategory
                         else:
                             print("inconsistent category: ", string)
 
                 except Exception as e:
                     print(e)
 
-    def __extractReview(self, stringList, prod_id, cursor):
+        return ",".join(categoryList)
+
+    def __extractReview(self, stringList, prod_id, cursor):  # extrai os dados de uma review
         helpful = -1
         costumer = -1
         date = -1
         rating = -1
         votes = -1
         aux = -1
+
+        reviewList = []
 
         if len(stringList) > 1 :
             stringList = stringList[1:]
@@ -116,28 +131,75 @@ class Parser(object):
 
             if costumer != -1:
                 costumer = str(costumer).strip()
-                self.__customerSet.add(costumer)
+                self.customerSet.add(costumer)
 
                 r = Review(date, votes, rating, helpful, prod_id, costumer)
-                if r.executeInsertStatement(cursor):
-                    pass
-                else:
-                    print("error inserting:\n", r.toString())
-                    print(string)
-                    break
+                reviewList.append(r.getValuesString())
+                # if r.executeInsertStatement(cursor):
+                #     pass
+                # else:
+                #     print("error inserting:\n", r.toString())
+                #     print(string)
+                #     break
+
+        return ",".join(reviewList)  # retorna a string para o bulk insert
 
         # print("Sucess!")
 
-    def __printCompletePercent(self, id):
-        if id > 0:
-            percent = (id * 100) / 548552
-            if int(percent) in self.__percents:
-                print(int(percent), "% loaded and inserted...")
-                self.__percents = self.__percents[1:]
-                self.__manager.getConnector().commit()
+    def __printCompletePercent(self, id, cursor):
+
+        percent = (id * 100) / 548551
+        if int(percent) in self.__percents:
+            print(int(percent), "% loaded and inserted...")
+            self.__percents = self.__percents[1:]
+
+            if len(self.bulkStrProdList) > 0:
+                try:
+                    values = ",".join(self.bulkStrProdList)
+                    cursor.execute(str(self.bulkStrProd + values))
+                except Exception as ex:
+                    print(ex)
+                    return False
+
+            if len(self.bulkStrSimilarList) > 0:
+                try:
+                    values = ",".join(self.bulkStrSimilarList)
+                    cursor.execute(self.bulkStrSimilar + values)
+                except Exception as ex:
+                    print(ex)
+                    return False
+
+            if len(self.bulkStrCatByProdList) > 0:
+                try:
+                    values = ",".join(self.bulkStrCatByProdList)
+                    cursor.execute(self.bulkStrCatByProd + values)
+                except Exception as ex:
+                    print(ex)
+                    return False
+
+            if len(self.bulkStrReviewList) > 0:
+                try:
+                    values = ",".join(self.bulkStrReviewList)
+                    cursor.execute(self.bulkStrReview + values)
+                except Exception as ex:
+                    print(ex)
+                    return False
+
+            self.__manager.getConnector().commit()
+
+            self.bulkStrProdList = []
+            self.bulkStrSimilarList = []
+            self.bulkStrCatByProdList = []
+            self.bulkStrReviewList = []
+            return True
+        else:
+            pass
+
+        return True
 
     def parse(self, path):
         cursor = self.__manager.getConnector().cursor()
+
         with open(path) as file:
             data = file.read()
             tokens = data.split('\n\n')
@@ -146,7 +208,6 @@ class Parser(object):
             for token in tokens:
 
                 # print(token)
-                self.__printCompletePercent(id)
                 asins = re.findall(ASIN, token, re.MULTILINE)
                 titles = re.findall(TITLE, token, re.MULTILINE)
                 similars = re.findall(SIMILAR, token, re.MULTILINE)
@@ -158,8 +219,10 @@ class Parser(object):
                 reviewChunk = token.split("reviews:")
                 if len(reviewChunk) > 1:
                     try:
-                        review =  reviewChunk[1].split("\n")
-                        self.__extractReview(review, id, cursor)
+                        review = reviewChunk[1].split("\n")
+                        reviewStr = self.__extractReview(review, id, cursor)
+                        if len(reviewStr) > 0:
+                            self.bulkStrReviewList.append(reviewStr)
                     except Exception as e:
                         print(e, '\n', review)
 
@@ -170,7 +233,9 @@ class Parser(object):
                         text = categoryChunk[0][0]  # categoryChuncategoryChunkk eh uma lista de tuplas, a primeira posição da tupla corresponde ao texto
                         text = text.replace("\n", "")
                         categories = text.split("|")
-                        self.__extractCategories(categories, cursor, id)
+                        catByProdStr = self.__extractCategories(categories, cursor, id)
+                        if len(catByProdStr) > 0:
+                            self.bulkStrCatByProdList.append(catByProdStr)
                     except Exception as e:
                         print(e, '\n', text)
 
@@ -191,11 +256,11 @@ class Parser(object):
                         asin = asins[0]
                     idGroup = -1
 
-                    if group not in self.__groupList:
-                        self.__groupList.append(group)
-                        idGroup = len(self.__groupList) -1
+                    if group not in self.groupList:
+                        self.groupList.append(group)
+                        idGroup = len(self.groupList) - 1
                     else:
-                        idGroup = self.__groupList.index(group)
+                        idGroup = self.groupList.index(group)
 
                     similarList = []  # similares
                     if len(similars) > 0:
@@ -206,28 +271,32 @@ class Parser(object):
 
                     currentProduct = Product(id, asin, title, salesrank, idGroup, similarList)
 
-                    if currentProduct.executeInsertStatement(cursor):
-                        pass
-                    else:
-                        print("error inserting product: ", id)
-                        return
+                    self.bulkStrProdList.append(currentProduct.getValuesString())
+                    similarStr = currentProduct.getSimilarValueString()
+                    if len(similarStr) > 0:
+                        self.bulkStrSimilarList.append(similarStr)
+
+                    # if currentProduct.executeInsertStatement(cursor):
+                    #     pass
+                    # else:
+                    #     print("error inserting product: ", id)
+                    #     return
                     # print(currentProduct.toString())
+                    if not self.__printCompletePercent(id, cursor):
+                        break
+
                 except Exception as e:
                     print(e)
                 id += 1
 
-            cursor.close()
-            self.__manager.getConnector().commit()
-
-
     def getCategoriesMap(self):
-        return self.__mapCategorioes
+        return self.mapCategorioes
 
     def getGroupsList(self):
-        return self.__groupList
+        return self.groupList
 
     def getCostumerSet(self):
-        return self.__customerSet
+        return self.customerSet
 
 
 if __name__ == '__main__':

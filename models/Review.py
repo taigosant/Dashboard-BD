@@ -17,6 +17,16 @@ class Review(object):
         stringToReturn += "constumerId =" + self.__constumerId + "\n"
         return stringToReturn
 
+    def getValuesString(self):
+        return "('{date}',{votes},{rating},{helpful},{p_id}, '{id_cost}')".format(
+                date=self.__date,
+                votes=int(self.__votes),
+                rating=int(self.__rating),
+                helpful=int(self.__helpful),
+                p_id=int(self.__productId),
+                id_cost=self.__constumerId
+            )
+
     def executeInsertStatement(self, cursor):  # Todo "ExecuteInsertStatement"
         try:
             statement = "INSERT INTO review (r_date, votes, rating, helpful, prod_id, ID_Costumer)" \

@@ -2,12 +2,12 @@
 
 class Query(object):
     CREATE_DATABASE_SCHEMA = """
+    drop table if exists product;
     drop table if exists review;
     drop table if exists categoriesbyproduct;
     drop table if exists similarbyproduct;
     drop table if exists groupproducts;
     drop table if exists category;
-    drop table if exists product;
     drop table if exists costumer;
     
     CREATE TABLE Product
@@ -16,7 +16,8 @@ class Query(object):
     ASIN TEXT NOT NULL,
     Salesrank INTEGER,
     title TEXT,
-    groupId INTEGER
+    groupId INTEGER,
+    UNIQUE(ASIN)
 );
 
 CREATE TABLE Category(
@@ -40,7 +41,6 @@ CREATE TABLE SimilarByProduct (
     ID_SimilarByProduct SERIAL PRIMARY KEY,
     ASIN_PRODUCT TEXT,
     ASIN_ProductSIMILAR TEXT
- -- FOREIGN KEY (ID_PRODUCT) references Product (ID_Product),
 );
 
 CREATE TABLE Review(
@@ -51,16 +51,14 @@ CREATE TABLE Review(
     Helpful INTEGER,
     Prod_Id INTEGER, 
     ID_Costumer TEXT
---     FOREIGN KEY (ID_Costumer) references Costumer (ID_Costumer),
 );
 CREATE TABLE CategoriesByProduct(
   ID_CategoriesByProduct SERIAL PRIMARY KEY ,
   ID_Prod Integer,
   ID_Cat Integer
--- FOREIGN KEY (ID_Prod) REFERENCES Product (ID_Product),
--- FOREIGN KEY (ID_Cat) REFERENCES Category (ID_Category)
 );
     """
+
     A_QUERY = """
         (select * 
         from review natural join product  
@@ -126,4 +124,20 @@ CREATE TABLE CategoriesByProduct(
     where rank <= 10
     order by id_group, rank;
 
+    """
+
+    ADD_PROD_GROUP_FK = """
+        alter table product add constraint fk_prod_group foreign key(groupId) references GroupProducts(ID_Group);
+    """
+
+    ADD_SIMILAR_PROD_FKS = """
+        alter table similarbyproduct add constraint fk_prod foreign key(asin_product) references product(asin), add constraint fk_sim_prod foreign key(asin_productsimilar) references product(asin);
+    """
+
+    ADD_REVIEW_COSTUMER_FK = """
+        alter table revie add constraint fk_costumer foreign key(id_costumer) references costumer(id_costumer);
+    """
+
+    ADD_CATEGORY_BY_PROD_FKS = """
+        alter table categoriesbyproduct add constraint fk_prod foreign key(id_prod) references product(id_product), add constraint fk_cat foreign key(id_cat) references category(id_category);
     """
