@@ -4,19 +4,31 @@
 """
 # !/usr/bin/python3
 from tkinter import *
+import sys
 
 root = Tk()
 root.title("Amazon Dashboard")
 root.geometry("750x700")
 #root.configure(bg="white")
 
-lbl = Label(root,width = 30, text = "Insira o ID do produto aqui: ")
+lbl = Label(root,width = 30, text = "Insira o asin do produto aqui: ")
 lbl.place(x = 0, y = 50)
 #funcao para pegar qual radioButton foi escolhido e o texto da entrada do usuario
 def search():
     searchStr =  inputText.get().strip()
     typeSearch = var.get()
-    print(typeSearch)
+    if(typeSearch== 1):
+        #result = mg.executeSelectStmt(Query.A_QUERY.format(asin="B00004YNH2", asin1="B00004YNH2"))
+        messagebox.showinfo("Resultado Busca", "o resultado da busca aqui " + searchStr)
+        print(typeSearch)
+    if(typeSearch== 2):
+       
+        messagebox.showinfo("Resultado Busca", "o resultado da busca aqui " + searchStr)
+        print(typeSearch)    
+    if(typeSearch== 3):
+       
+        messagebox.showinfo("Resultado Busca", "o resultado da busca C " + searchStr)
+        print(typeSearch)     
     print(searchStr)
     
 bttn1 = Button(root,text = "Pesquisar",fg = "darkblue",command = search)
@@ -55,7 +67,17 @@ Lb1.place(x = 30 , y = 150)
 def listButt():
     Lb1.get(ACTIVE)
     if(len(Lb1.curselection())>0):
-        print(Lb1.curselection()[0])
+        selectL= Lb1.curselection()[0]
+        if(selectL==0):
+             messagebox.showinfo("Resultado Busca", "o resultado da busca D ")
+        if(selectL==1):
+             messagebox.showinfo("Resultado Busca", "o resultado da busca E ")        
+        if(selectL==2):
+             messagebox.showinfo("Resultado Busca", "o resultado da busca F ")
+        if(selectL==3):
+             messagebox.showinfo("Resultado Busca", "o resultado da busca G ")     
+     
+        print(selectL)
 
 btnList = Button(root,text="Listar",fg = "darkblue",command = listButt)
 btnList.place(x = 600, y = 170)
