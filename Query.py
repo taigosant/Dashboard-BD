@@ -2,13 +2,13 @@
 
 class Query(object):
     CREATE_DATABASE_SCHEMA = """
-    drop table if exists product;
     drop table if exists review;
     drop table if exists categoriesbyproduct;
     drop table if exists similarbyproduct;
-    drop table if exists groupproducts;
     drop table if exists category;
     drop table if exists costumer;
+    drop table if exists product;
+    drop table if exists groupproducts;
     
     CREATE TABLE Product
 (
@@ -125,7 +125,10 @@ CREATE TABLE CategoriesByProduct(
     order by id_group, rank;
 
     """
-
+    REMOVE_SIMILAR_INCONSISTENCES= """
+        delete from similarbyproduct where id_similarbyproduct 
+        in (select id_similarbyproduct from product p1 join similarbyproduct on p1.asin = asin_product left join product p2 on p2.asin = asin_productsimilar where p2.asin is null);
+    """
     ADD_PROD_GROUP_FK = """
         alter table product add constraint fk_prod_group foreign key(groupId) references GroupProducts(ID_Group);
     """
@@ -135,7 +138,7 @@ CREATE TABLE CategoriesByProduct(
     """
 
     ADD_REVIEW_COSTUMER_FK = """
-        alter table revie add constraint fk_costumer foreign key(id_costumer) references costumer(id_costumer);
+        alter table review add constraint fk_costumer foreign key(id_costumer) references costumer(id_costumer);
     """
 
     ADD_CATEGORY_BY_PROD_FKS = """

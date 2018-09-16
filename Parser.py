@@ -1,5 +1,4 @@
 #number of products: 548552
-import pickle
 import re
 from models.Product import Product
 from models.Category import Category
@@ -21,7 +20,7 @@ class Parser(object):
         self.__percents = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
         self.mapCategorioes = {}
         self.groupList = []
-        self.customerSet = set()  # consjunto de costumers para evitar identificadores repetidos
+        self.customerSet = set()  # conjunto de costumers para evitar identificadores repetidos
         self.__manager = manager
         self.bulkStrProd = "INSERT INTO product (id_product, asin, salesrank, title, groupid) VALUES "
         self.bulkStrSimilar = "INSERT INTO similarbyproduct (ASIN_PRODUCT, ASIN_ProductSIMILAR) VALUES "
@@ -146,6 +145,7 @@ class Parser(object):
 
         # print("Sucess!")
 
+    # funcao responsavel por mostrar o progresso da insercao e commitar as inserçoes no banco
     def __printCompletePercent(self, id, cursor):
 
         percent = (id * 100) / 548551

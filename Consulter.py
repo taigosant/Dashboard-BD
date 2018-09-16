@@ -11,10 +11,6 @@ if __name__ == '__main__':
     mg = Manager(host, user, db_name, password)
     mg.connect()
     if mg.isConnected():
-        mg.executeArbitraryStatement(Query.ADD_PROD_GROUP_FK)
-        mg.executeArbitraryStatement(Query.ADD_SIMILAR_PROD_FKS)
-        mg.executeArbitraryStatement(Query.ADD_REVIEW_COSTUMER_FK)
-        mg.executeArbitraryStatement(Query.ADD_CATEGORY_BY_PROD_FKS)
 
         result = mg.executeSelectStmt(Query.A_QUERY.format(asin="B00004YNH2", asin1="B00004YNH2"))
         print(result, '\n')
