@@ -4,6 +4,18 @@ Created on Sun Sep 16 11:03:42 2018
 
 @author: Katiely
 """
+from ManagerDB import Manager
+from Query import Query
+host = "localhost"
+user = "postgres"
+
+#user = sys.argv[2]
+db_name = "bdzinho"
+#db_name = sys.argv[3]
+#password = sys.argv[4]
+password = "senha123"
+#path = sys.argv[5]
+
 def showWrongChoice():
     print("_____________________________________________________\n")
     print("Essa escolha nao esta disponivel no sistema\nPor favor, digite as opcoes dentro do menu\n")
@@ -31,28 +43,42 @@ def query1():
     print("\n\n\n")
     print("Informe o ASIN do produto:  ")
     productASIN = input()
+    result = mg.executeSelectStmt(Query.A_QUERY.format(asin=productASIN, asin1=productASIN))
+    print(result, '\n')
     
 def query2():
     print("\n\n\n")
-    print("Informe o ASIN do produto:  ")
+    print("->Informe o ASIN do produto:  ")
     productASIN = input()
+    #"B00004YNH2"
+    result1 = mg.executeSelectStmt(Query.B_QUERY.format(ASIN=productASIN))
+    print(result1, '\n')
     
 def query3():
     print("\n\n\n")
     print("Informe o ASIN do produto:  ")
     productASIN = input()
+    result2 = mg.executeSelectStmt(Query.C_QUERY.format(asin=productASIN))
+    print(result2, '\n')
 
 def query4():
     print("\n\n\n")
+    result3 = mg.executeSelectStmt(Query.D_QUERY)
+    print(result3, '\n')
     
 def query5():
     print("\n\n\n")
+    result4 = mg.executeSelectStmt(Query.E_QUERY)
+    print(result4, '\n')
     
 def query6():
     print("\n\n\n")
-   
+    result5 = mg.executeSelectStmt(Query.F_QUERY)
+    print(result5, '\n')
 def query7():
     print("\n\n\n")
+    result6 = mg.executeSelectStmt(Query.G_QUERY)
+    print(result6, '\n')
          
     
 def choiceUser(choiceInput):
@@ -78,13 +104,16 @@ def choiceUser(choiceInput):
     
 if __name__ == '__main__':
     showWelcome()
-    choiceInput = -1323323
-    while(1):
-        showMenu()
-        choiceInput = int(input("-->"))
-        if(choiceInput == 0):
-            showBye()
-            break
-        else:
-            choiceUser(choiceInput)
+    mg = Manager(host, user, db_name, password)
+    mg.connect()
+    if mg.isConnected():
+    	choiceInput = -1323323
+    	while(1):
+        	showMenu()
+        	choiceInput = int(input("-->"))
+        	if(choiceInput == 0):
+        		showBye()
+        		break
+        	else:
+        		choiceUser(choiceInput)
     
