@@ -16,20 +16,23 @@ No momento só temos as tabelas presentes no arquivo:
 > tables.sql
 
 ### To do's:
-[X] Outras tables
+
+[ ] Relatório : https://www.overleaf.com/19339287fgpwhnysfptd
+
+[ ] Adicionar a chave estrangeira nas tabelas = alter table
+
+[ ] Dashboard
+
+[ ] melhorar o diagrama E-R
 
 [X] Scripts pra facilitar a vida
 
 [X] Consultas SQL
 
-[] Dashboard
-
-[] Relatório
+[X] Outras tables
 
 [X ] Criar as outras classes no paito: review e costumer
 
 [X ] Decidir em criar as entradas Group_Product ao inserir produto no banco ou antes ? 
 
-[ ] melhorar o diagrama E-R
 
-[x] criar um link para o relatorio : https://www.overleaf.com/19339287fgpwhnysfptd
