@@ -5,15 +5,9 @@ Simple dashboard made for the discipline BD1 - 2018/2
 
 > python3 main.py **host** **user** **database** **password** **path** 
 
-
 ### Conectando com o postgres
 
-1) Criar base de dados;
-2) Criar usuário.
-3) Se der problema com autenticação, alterar pg_hba.conf
-
-No momento só temos as tabelas presentes no arquivo: 
-> tables.sql
+O código já faz isso automaticamente :D
 
 ### To do's:
 
