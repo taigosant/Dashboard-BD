@@ -23,7 +23,7 @@ if __name__ == '__main__':
         print("creating database...")
         manager.executeArbitraryStatement(Query.CREATE_DATABASE_SCHEMA)
         begin = time.time()
-        print('loading data...') #Todo talvez contabilizar tempo de loading e percentual, isso é só frescura pra caso não tenha mais nada pra fazer
+        print('loading data...')
         parser = Parser(manager)
         parser.parse(path)
         print("costumers quantity: ", len(parser.getCostumerSet()))
