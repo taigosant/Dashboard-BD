@@ -3,7 +3,9 @@ Simple dashboard made for the discipline BD1 - 2018/2
 
 ### Execução
 
-> python3 main.py **host** **user** **database** **password** **path** 
+> python3 Builder.py **host** **user** **database** **password** **path** 
+
+> python3 DashboardServer.py **host** **user** **database** **password** 
 
 ### Conectando com o postgres
 
@@ -18,7 +20,6 @@ O código já faz isso automaticamente :D
 [ ] Dashboard
 
 [ ] melhorar o diagrama E-R
-
 [X] Scripts pra facilitar a vida
 
 [X] Consultas SQL
