@@ -1,6 +1,9 @@
 # Dashboard-BD
 Simple dashboard made for the discipline BD1 - 2018/2
 
+### Esquema
+![oi] https://raw.githubusercontent.com/taigosant/Dashboard-BD/master/rascunhoMER.png
+
 ### Execução
 
 > python3 Builder.py **host** **user** **database** **password** **path** 
