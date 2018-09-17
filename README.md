@@ -2,7 +2,7 @@
 Simple dashboard made for the discipline BD1 - 2018/2
 
 ### Esquema
-![oi] https://raw.githubusercontent.com/taigosant/Dashboard-BD/master/rascunhoMER.png
+![esquema](https://raw.githubusercontent.com/taigosant/Dashboard-BD/master/rascunhoMER.png)
 
 ### Execução
 
